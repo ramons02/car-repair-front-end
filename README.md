@@ -2,7 +2,7 @@
 
 Sistema acadêmico para gestão de oficina mecânica, desenvolvido com **Angular 21**, **TypeScript** e modelagem relacional em **PostgreSQL**, com foco em organização didática, separação por domínios e preparação para apresentação técnica em sala de aula.
 
-**Objetivo desta documentação:** Refletir o estado atual do projeto, padronizar a nomenclatura para CarRepair, e consolidar uma visão clara da arquitetura, domínio, banco de dados, fluxos, extensibilidade e operação do sistema.
+**Objetivo desta documentação:** Refletir o estado atual do projeto, padronizar a nomenclatura para **CarRepair**, e consolidar uma visão clara da arquitetura, domínio, banco de dados, fluxos, extensibilidade e operação do sistema.
 
 ---
 
@@ -13,98 +13,71 @@ O CarRepair é uma aplicação de apoio à operação de uma oficina mecânica. 
 - **Clientes:** Atendidos pela oficina.
 - **Veículos:** Vinculados aos clientes.
 - **Mecânicos:** Responsáveis pela execução técnica.
-- **Ordens de Serviço (OS):** Que centralizam atendimento, diagnóstico, serviços executados e peças aplicadas.
+- **Ordens de Serviço (OS):** Centralizam atendimento, diagnóstico e serviços.
 
-No frontend, a aplicação foi estruturada em páginas standalone e serviços por domínio. A comunicação com a API é centralizada por uma camada HTTP base, e os erros são tratados por um interceptor global, responsável por transformar falhas técnicas em mensagens amigáveis para o usuário.
+No frontend, a aplicação utiliza componentes **standalone** e serviços por domínio. A comunicação com a API é centralizada em uma camada HTTP base (`ApiService`), com tratamento global de erros.
 
 ---
 
 ## 2. Objetivo e Aplicação do Projeto
 
 ### 2.1 Objetivo Acadêmico
-O projeto foi construído para demonstrar, em um cenário realista e didático:
-- Modelagem de domínio.
-- Organização de frontend Angular por responsabilidades.
-- Consumo de API REST.
-- Tratamento centralizado de erros.
-- Separação entre modelos, páginas, serviços e utilitários.
+Demonstrar na prática:
+- Modelagem de domínio e arquitetura em camadas.
+- Frontend moderno com Angular 21 e Signals.
+- Consumo de API REST e tratamento centralizado de erros.
 - Mapeamento entre entidades de negócio e estrutura relacional.
 
 ### 2.2 Aplicação Prática
-Em um contexto de oficina mecânica, o sistema permite representar o ciclo principal de atendimento:
-1. Cadastrar um cliente.
-2. Associar um ou mais veículos ao cliente.
-3. Cadastrar mecânicos e operadores do sistema.
-4. Abrir uma ordem de serviço para um veículo.
-5. Registrar os serviços executados e peças aplicadas.
-6. Acompanhar o status da ordem até a finalização.
+Permite o ciclo completo de atendimento:
+1. Cadastro de Clientes e Veículos.
+2. Gestão de Mecânicos e Especialidades.
+3. Abertura de OS associando Veículo, Cliente e Mecânico.
+4. Registro de serviços executados e acompanhamento de status.
 
 ---
 
 ## 3. Estado Atual do Projeto
-Atualmente, o projeto está organizado para operar com uma API configurada via ambiente:
-- **apiBaseUrl:** `http://localhost:9081` (ajustado conforme configuração atual)
-- Os serviços de domínio consomem endpoints REST.
-- A camada HTTP comum é fornecida por `ApiService`.
-- Falhas de requisição são tratadas de forma centralizada.
-
-> [!IMPORTANT]
-> **Diretriz Arquitetural:** O frontend deve consumir a API real. Falhas de integração não devem disparar dados simulados; erros devem ser capturados e apresentados ao usuário via interface amigável.
+- **API Base:** `http://localhost:9081` (Backend Spring Boot).
+- **Frontend:** `http://localhost:4200` (Angular 21).
+- **Resiliência:** Dashboard carrega estatísticas em tempo real com tratamento individual de falhas.
+- **Documentação:** README consolidado para apresentação técnica.
 
 ---
 
 ## 4. Stack Tecnológica
-
-### 4.1 Frontend
-- **Angular 21**
-- **TypeScript 6.0.x**
-- **TailwindCSS 4.0**
-- **RxJS 7.8.x**
-
-### 4.2 Build e Ferramentas
-- **Angular CLI 21**
-- **@angular/build** (Application Builder)
-- **Vitest** (Testes Unitários)
-- **Prettier** (Formatação)
-
-### 4.3 Banco de Dados
-- **PostgreSQL** (com extensões `pgcrypto`, `UUID`, e tipos `ENUM`).
+- **Frontend:** Angular 21, TypeScript 6.0, TailwindCSS 4.0, RxJS 7.8.
+- **Ferramentas:** Angular CLI 21, Vitest (Testes), Prettier (Estilo).
+- **Banco de Dados:** PostgreSQL (UUID, ENUMs, pgcrypto).
 
 ---
 
-## 5. Estrutura do Projeto
+## 5. Estrutura do Projeto (Frontend)
 
 ```text
 .
 ├── src/
 │   ├── app/
-│   │   ├── core/           # Infraestrutura (http, services base)
-│   │   ├── features/       # Módulos de negócio (Dashboard, Clientes, etc.)
-│   │   ├── models/         # Interfaces TypeScript (Domínio)
-│   │   ├── shared/         # Componentes e pipes reutilizáveis
-│   │   ├── app.config.ts   # Configuração da aplicação
-│   │   ├── app.routes.ts   # Mapeamento de rotas
+│   │   ├── core/           # Serviços base (HTTP, API)
+│   │   ├── features/       # Módulos: dashboard, clientes, veiculos, mecanico, servicos, ordem-servico
+│   │   ├── models/         # Interfaces de domínio (Interfaces TS)
+│   │   ├── shared/         # Componentes, diretivas e pipes comuns
+│   │   ├── app.routes.ts   # Configuração de rotas (Lazy Loading)
 │   │   └── app.ts          # Componente raiz
-│   └── environments/       # Configurações por ambiente
-├── angular.json
-├── package.json
-└── README.md
+│   └── environments/       # Configurações de API por ambiente
 ```
 
 ---
 
 ## 6. Mapeamento de Rotas
 
-As rotas atuais da aplicação são gerenciadas via *Lazy Loading*:
-
 ```mermaid
-graph LR
-    Root[/] --> Dash[Dashboard]
-    Root --> Cli[Clientes]
-    Root --> Vei[Veículos]
-    Root --> Mec[Mecânicos]
-    Root --> OS[Ordens de Serviço]
-    Root --> Serv[Serviços]
+graph TD
+    A[Dashboard /] --> B[Clientes]
+    A --> C[Veículos]
+    A --> D[Mecânicos]
+    A --> E[Serviços]
+    A --> F[Ordens de Serviço]
 ```
 
 ---
@@ -112,20 +85,20 @@ graph LR
 ## 7. Domínios do Negócio
 
 ### 7.1 Cliente
-Representa o proprietário ou responsável pelo veículo.
-- `id`, `nome`, `cpf`, `telefone`, `endereco`, `cidade`, etc.
+- **Campos:** `id`, `nome`, `cpf`, `telefone`, `endereco`, `cidade`.
+- **Regra:** Um cliente pode ter múltiplos veículos.
 
 ### 7.2 Veículo
-Representa o bem atendido pela oficina.
-- `id`, `clienteId`, `placa`, `marca`, `modelo`, `ano`.
+- **Campos:** `id`, `clienteId`, `placa`, `marca`, `modelo`, `ano`.
+- **Regra:** Identifica o automóvel atendido na OS.
 
 ### 7.3 Mecânico
-Representa o profissional técnico responsável pela execução.
-- `id`, `nome`, `especialidade`, `telefone`, `ativo`.
+- **Campos:** `id`, `nome`, `especialidade`, `telefone`.
+- **Regra:** Profissional técnico vinculado aos serviços executados.
 
-### 7.4 Ordem de Serviço
-Entidade central que vincula todos os domínios.
-- `status`: `aberta`, `em_execucao`, `finalizada`, `cancelada`.
+### 7.4 Ordem de Serviço (OS)
+- **Campos:** `id`, `clienteId`, `veiculoId`, `mecanicoId`, `status`, `dataAbertura`.
+- **Status:** `aberta`, `em_execucao`, `finalizada`, `cancelada`.
 
 ---
 
@@ -136,32 +109,34 @@ erDiagram
     CLIENTE ||--o{ VEICULO : possui
     CLIENTE ||--o{ ORDEM_SERVICO : abre
     VEICULO ||--o{ ORDEM_SERVICO : recebe
-    MECANICO ||--o{ SERVICO : executa
+    MECANICO ||--o{ SERVICO : responsavel
     ORDEM_SERVICO ||--o{ SERVICO : contem
-    ORDEM_SERVICO ||--o{ PECA : aplica
 ```
 
 ---
 
-## 9. Como Executar o Projeto
+## 9. Fluxo Funcional do Sistema
+1. **Dashboard:** Visão geral e atalhos de acesso rápido.
+2. **Cadastro:** Cadastro de Clientes, Veículos e Mecânicos.
+3. **Serviços:** Registro de mão de obra vinculada a um Mecânico.
+4. **OS:** Abertura e gestão do fluxo de reparo.
 
-### 9.1 Instalação
-```bash
-npm install
-```
+---
 
-### 9.2 Execução (Desenvolvimento)
-```bash
-npm start
-```
-O sistema estará disponível em: `http://localhost:4200`
+## 10. Como Executar
 
-### 9.3 Testes
+### Pré-requisitos
+- Node.js 20+
+- Backend em execução na porta 9081
+
+### Comandos
 ```bash
-npm test
+npm install     # Instalar dependências
+npm start       # Rodar frontend (localhost:4200)
+npm test        # Rodar testes unitários
 ```
 
 ---
 
-## 10. Conclusão
-O **CarRepair** é uma base acadêmica consistente para demonstrar como estruturar uma aplicação web de oficina mecânica com frontend Angular e persistência relacional. A solução evidencia conceitos de organização por domínio, separação de responsabilidades e tratamento de erros, sendo ideal para apresentações técnicas e evolução contínua.
+## 11. Conclusão
+O **CarRepair** representa uma solução arquiteturalmente sólida para o ambiente acadêmico, demonstrando a integração eficiente entre um frontend reativo moderno e um backend relacional robusto.
