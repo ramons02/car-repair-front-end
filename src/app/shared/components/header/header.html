@@ -9,6 +9,16 @@
     <ul class="flex gap-1">
       <li>
         <a
+          routerLink="/dashboard"
+          routerLinkActive="bg-orange-500 text-white"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+        >
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a
           routerLink="/clientes"
           routerLinkActive="bg-orange-500 text-white"
           [routerLinkActiveOptions]="{ exact: false }"
@@ -25,6 +35,16 @@
           class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
         >
           Veículos
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/mecanicos"
+          routerLinkActive="bg-orange-500 text-white"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+        >
+          Mecânicos
         </a>
       </li>
       <li>

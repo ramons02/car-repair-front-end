@@ -1,7 +1,13 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'clientes', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./features/dashboard/dashboard').then(m => m.Dashboard),
+  },
 
   {
     path: 'clientes',
@@ -52,6 +58,22 @@ export const routes: Routes = [
   },
 
   {
+    path: 'mecanicos',
+    loadComponent: () =>
+      import('./features/mecanico/mecanico-list/mecanico-list').then(m => m.MecanicoList),
+  },
+  {
+    path: 'mecanicos/novo',
+    loadComponent: () =>
+      import('./features/mecanico/mecanico-form/mecanico-form').then(m => m.MecanicoForm),
+  },
+  {
+    path: 'mecanicos/:id/editar',
+    loadComponent: () =>
+      import('./features/mecanico/mecanico-form/mecanico-form').then(m => m.MecanicoForm),
+  },
+
+  {
     path: 'ordens-servico',
     loadComponent: () =>
       import('./features/ordem-servico/ordem-servico-list/ordem-servico-list').then(
@@ -73,5 +95,5 @@ export const routes: Routes = [
       ),
   },
 
-  { path: '**', redirectTo: 'clientes' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

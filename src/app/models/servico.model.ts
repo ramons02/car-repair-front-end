@@ -2,7 +2,7 @@ export interface Servico {
   id?: string;
   ordemServicoId?: string;
   descricao: string;
-  mecanico: string;
+  mecanicoId: string;
   dataHoraServico: string;
   dataHoraTermino: string;
   valor: number;

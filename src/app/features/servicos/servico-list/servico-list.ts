@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../core/services/api';
 import { Servico } from '../../../models/servico.model';
+import { Mecanico } from '../../../models/mecanico.model';
 import { Page } from '../../../models/page.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-servico-list',
@@ -13,6 +15,7 @@ import { Page } from '../../../models/page.model';
 })
 export class ServicoList implements OnInit {
   servicos = signal<Servico[]>([]);
+  mecanicos = signal<Mecanico[]>([]);
   loading = signal(false);
   erro = signal('');
 
@@ -25,13 +28,18 @@ export class ServicoList implements OnInit {
   carregar(): void {
     this.loading.set(true);
     this.erro.set('');
-    this.api.get<Page<Servico>>('servicos').subscribe({
-      next: data => {
-        this.servicos.set(data.content);
+    
+    forkJoin({
+      servicos: this.api.get<Page<Servico>>('servicos'),
+      mecanicos: this.api.get<Page<Mecanico>>('mecanicos'),
+    }).subscribe({
+      next: ({ servicos, mecanicos }) => {
+        this.servicos.set(servicos.content);
+        this.mecanicos.set(mecanicos.content);
         this.loading.set(false);
       },
       error: () => {
-        this.erro.set('Erro ao carregar serviços. Verifique se o servidor está ativo.');
+        this.erro.set('Erro ao carregar dados. Verifique se o servidor está ativo.');
         this.loading.set(false);
       },
     });
@@ -60,5 +68,10 @@ export class ServicoList implements OnInit {
 
   formatarValor(valor: number): string {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  getMecanicoNome(mecanicoId: string): string {
+    const mecanico = this.mecanicos().find(m => m.id === mecanicoId);
+    return mecanico ? mecanico.nome : 'N/A';
   }
 }

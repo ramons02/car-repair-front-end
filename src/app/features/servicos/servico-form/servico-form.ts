@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { ApiService } from '../../../core/services/api';
 import { Servico } from '../../../models/servico.model';
 import { OrdemServico } from '../../../models/ordem-servico.model';
+import { Mecanico } from '../../../models/mecanico.model';
 import { Page } from '../../../models/page.model';
 import { InputMaskDirective } from '../../../shared/directives/input-mask.directive';
 
@@ -17,13 +18,14 @@ import { InputMaskDirective } from '../../../shared/directives/input-mask.direct
 })
 export class ServicoForm implements OnInit {
   servico: Servico = {
-    descricao: '', mecanico: '',
+    descricao: '', mecanicoId: '',
     dataHoraServico: '', dataHoraTermino: '',
     valor: 0,
   };
 
   valorDisplay = '';
   ordens: OrdemServico[] = [];
+  mecanicos: Mecanico[] = [];
 
   editando = signal(false);
   loading = signal(false);
@@ -45,10 +47,12 @@ export class ServicoForm implements OnInit {
 
       forkJoin({
         ordens: this.api.get<Page<OrdemServico>>('ordem-servicos'),
+        mecanicos: this.api.get<Page<Mecanico>>('mecanicos'),
         servico: this.api.get<Servico>(`servicos/${id}`),
       }).subscribe({
-        next: ({ ordens, servico }) => {
+        next: ({ ordens, mecanicos, servico }) => {
           this.ordens = ordens.content;
+          this.mecanicos = mecanicos.content;
           this.servico = {
             ...servico,
             dataHoraServico: servico.dataHoraServico?.slice(0, 16) ?? '',
@@ -63,9 +67,15 @@ export class ServicoForm implements OnInit {
         },
       });
     } else {
-      this.api.get<Page<OrdemServico>>('ordem-servicos').subscribe({
-        next: data => { this.ordens = data.content; },
-        error: () => { /* ordens são opcionais */ },
+      forkJoin({
+        ordens: this.api.get<Page<OrdemServico>>('ordem-servicos'),
+        mecanicos: this.api.get<Page<Mecanico>>('mecanicos'),
+      }).subscribe({
+        next: ({ ordens, mecanicos }) => {
+          this.ordens = ordens.content;
+          this.mecanicos = mecanicos.content;
+        },
+        error: () => { /* ordens e mecanicos são opcionais */ },
       });
     }
   }
