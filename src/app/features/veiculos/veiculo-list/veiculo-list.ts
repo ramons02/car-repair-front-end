@@ -27,7 +27,17 @@ export class VeiculoList implements OnInit {
     this.erro.set('');
     this.api.get<Page<Veiculo>>('veiculos').subscribe({
       next: data => {
-        this.veiculos.set(data.content);
+        const veiculosFormatados = data.content.map(v => {
+          if (v.placa) {
+            let p = v.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (p.length > 3) {
+              p = p.substring(0, 3) + '-' + p.substring(3);
+            }
+            v.placa = p;
+          }
+          return v;
+        });
+        this.veiculos.set(veiculosFormatados);
         this.loading.set(false);
       },
       error: () => {

@@ -37,6 +37,13 @@ export class VeiculoForm implements OnInit {
       this.loading.set(true);
       this.api.get<Veiculo>(`veiculos/${id}`).subscribe({
         next: data => {
+          if (data.placa) {
+            let p = data.placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (p.length > 3) {
+              p = p.substring(0, 3) + '-' + p.substring(3);
+            }
+            data.placa = p;
+          }
           this.veiculo = data;
           this.loading.set(false);
         },
@@ -73,5 +80,18 @@ export class VeiculoForm implements OnInit {
 
   cancelar(): void {
     this.router.navigate(['/veiculos']);
+  }
+
+  onPlacaInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let p = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (p.length > 7) {
+      p = p.substring(0, 7);
+    }
+    if (p.length > 3) {
+      p = p.substring(0, 3) + '-' + p.substring(3);
+    }
+    input.value = p;
+    this.veiculo.placa = p;
   }
 }
