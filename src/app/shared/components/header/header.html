@@ -1,0 +1,73 @@
+<nav class="bg-gray-900 text-white shadow-md">
+  <div class="container mx-auto px-4 flex items-center justify-between h-14">
+
+    <div class="flex items-center gap-3">
+      <img src="/carrolaranja.png" alt="Car Repair Logo" class="h-10 w-10 object-contain">
+      <span class="font-bold text-lg tracking-wide text-orange-400">Car Repair</span>
+    </div>
+
+    <ul class="flex gap-1">
+      <li>
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="bg-orange-500 text-white"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+        >
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/clientes"
+          routerLinkActive="bg-orange-500 text-white"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+        >
+          Clientes
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/veiculos"
+          routerLinkActive="bg-orange-500 text-white"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+        >
+          Veículos
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/mecanicos"
+          routerLinkActive="bg-orange-500 text-white"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+        >
+          Mecânicos
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/ordens-servico"
+          routerLinkActive="bg-orange-500 text-white"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+        >
+          Ordens de Serviço
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/servicos"
+          routerLinkActive="bg-orange-500 text-white"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+        >
+          Serviços
+        </a>
+      </li>
+    </ul>
+
+  </div>
+</nav>

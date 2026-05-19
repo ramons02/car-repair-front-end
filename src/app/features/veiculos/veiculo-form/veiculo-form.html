@@ -1,0 +1,131 @@
+<div class="p-4 max-w-2xl">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">
+    {{ editando() ? 'Editar Veículo' : 'Novo Veículo' }}
+  </h1>
+
+  @if (loading()) {
+    <p class="text-gray-500">Carregando...</p>
+  } @else {
+
+    @if (erro()) {
+      <div class="bg-red-100 text-red-700 border border-red-300 rounded p-3 mb-4">
+        {{ erro() }}
+      </div>
+    }
+
+    <form (ngSubmit)="salvar()" #form="ngForm" novalidate>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Marca *</label>
+          <input
+            type="text"
+            [(ngModel)]="veiculo.marca"
+            name="marca"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Modelo *</label>
+          <input
+            type="text"
+            [(ngModel)]="veiculo.modelo"
+            name="modelo"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Ano de Fabricação *</label>
+          <input
+            type="number"
+            [(ngModel)]="veiculo.anoFabricacao"
+            name="anoFabricacao"
+            #anoFab="ngModel"
+            required
+            min="1900"
+            [max]="anoAtual"
+            placeholder="ex: 2020"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+          @if (anoFab.invalid && anoFab.touched) {
+            <p class="text-red-500 text-xs mt-1">
+              @if (anoFab.errors?.['required']) { Ano de fabricação é obrigatório. }
+              @if (anoFab.errors?.['min']) { Ano deve ser a partir de 1900. }
+              @if (anoFab.errors?.['max']) { Ano não pode ser maior que {{ anoAtual }}. }
+            </p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Ano do Modelo *</label>
+          <input
+            type="number"
+            [(ngModel)]="veiculo.anoModelo"
+            name="anoModelo"
+            #anoMod="ngModel"
+            required
+            min="1900"
+            [max]="anoAtual"
+            placeholder="ex: 2021"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+          @if (anoMod.invalid && anoMod.touched) {
+            <p class="text-red-500 text-xs mt-1">
+              @if (anoMod.errors?.['required']) { Ano do modelo é obrigatório. }
+              @if (anoMod.errors?.['min']) { Ano deve ser a partir de 1900. }
+              @if (anoMod.errors?.['max']) { Ano não pode ser maior que {{ anoAtual }}. }
+            </p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Placa *</label>
+          <input
+            type="text"
+            [ngModel]="veiculo.placa"
+            (input)="onPlacaInput($event)"
+            name="placa"
+            required
+            maxlength="8"
+            placeholder="ex: ABC-1234"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Cor *</label>
+          <input
+            type="text"
+            [(ngModel)]="veiculo.cor"
+            name="cor"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          type="submit"
+          [disabled]="salvando() || form.invalid"
+          class="bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white px-6 py-2 rounded font-medium transition-colors"
+        >
+          {{ salvando() ? 'Salvando...' : 'Salvar' }}
+        </button>
+        <button
+          type="button"
+          (click)="cancelar()"
+          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded font-medium transition-colors"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+
+  }
+</div>

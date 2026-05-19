@@ -1,0 +1,116 @@
+<div class="p-4 max-w-2xl">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">
+    {{ editando() ? 'Editar Serviço' : 'Novo Serviço' }}
+  </h1>
+
+  @if (loading()) {
+    <p class="text-gray-500">Carregando...</p>
+  } @else {
+    @if (erro()) {
+      <div class="bg-red-100 text-red-700 border border-red-300 rounded p-3 mb-4">
+        {{ erro() }}
+      </div>
+    }
+    <form (ngSubmit)="salvar()" #form="ngForm" novalidate>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Descrição *</label>
+          <input
+            type="text"
+            [(ngModel)]="servico.descricao"
+            name="descricao"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Mecânico *</label>
+          <select
+            [(ngModel)]="servico.mecanicoId"
+            name="mecanicoId"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          >
+            <option value="" disabled>Selecione um mecânico</option>
+            @for (mecanico of mecanicos; track mecanico.id) {
+              <option [value]="mecanico.id">{{ mecanico.nome }} ({{ mecanico.especialidade }})</option>
+            }
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Data/Hora de Início *</label>
+          <input
+            type="datetime-local"
+            [(ngModel)]="servico.dataHoraServico"
+            name="dataHoraServico"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Data/Hora de Término *</label>
+          <input
+            type="datetime-local"
+            [(ngModel)]="servico.dataHoraTermino"
+            name="dataHoraTermino"
+            required
+            [class.border-red-400]="terminoInvalido"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+          @if (terminoInvalido) {
+            <p class="text-red-600 text-xs mt-1">Data de término não pode ser anterior à data de início.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Valor (R$) *</label>
+          <input
+            type="text"
+            [(ngModel)]="valorDisplay"
+            name="valor"
+            required
+            appMask="currency"
+            placeholder="R$ 0,00"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Ordem de Serviço (opcional)</label>
+          <select
+            [(ngModel)]="servico.ordemServicoId"
+            name="ordemServicoId"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          >
+            <option value="">-- Nenhuma --</option>
+            @for (ordem of ordens; track ordem.id) {
+              <option [value]="ordem.id">OS #{{ ordem.id?.slice(0, 8) }} — {{ ordem.problema }}</option>
+            }
+          </select>
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          type="submit"
+          [disabled]="salvando() || form.invalid || terminoInvalido"
+          class="bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white px-6 py-2 rounded font-medium transition-colors"
+        >
+          {{ salvando() ? 'Salvando...' : 'Salvar' }}
+        </button>
+        <button
+          type="button"
+          (click)="cancelar()"
+          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded font-medium transition-colors"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  }
+</div>
