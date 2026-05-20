@@ -56,12 +56,14 @@
             maxlength="15"
             placeholder="(99) 99999-9999"
             required
+            pattern="^\(\d{2}\) \d{4,5}-\d{4}$"
+            inputmode="numeric"
             #telefone="ngModel"
             class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
             [class.border-red-500]="telefone.invalid && telefone.touched"
           />
           @if (telefone.invalid && telefone.touched) {
-            <span class="text-xs text-red-500">Telefone é obrigatório</span>
+            <span class="text-xs text-red-500">Telefone inválido ou incompleto</span>
           }
         </div>
       </div>

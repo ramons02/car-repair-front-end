@@ -31,12 +31,19 @@
             type="text"
             [(ngModel)]="cliente.cpf"
             name="cpf"
+            #cpf="ngModel"
             required
+            pattern="^\d{3}\.\d{3}\.\d{3}-\d{2}$"
+            inputmode="numeric"
             maxlength="14"
             placeholder="000.000.000-00"
             appMask="cpf"
             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            [class.border-red-400]="cpf.invalid && cpf.touched"
           />
+          @if (cpf.invalid && cpf.touched) {
+            <p class="text-red-600 text-xs mt-1">CPF inválido ou incompleto.</p>
+          }
         </div>
 
         <div>
@@ -45,12 +52,19 @@
             type="text"
             [(ngModel)]="cliente.telefone"
             name="telefone"
+            #telefone="ngModel"
             required
+            pattern="^\(\d{2}\) \d{4,5}-\d{4}$"
+            inputmode="numeric"
             maxlength="15"
             placeholder="(00) 00000-0000"
             appMask="telefone"
             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            [class.border-red-400]="telefone.invalid && telefone.touched"
           />
+          @if (telefone.invalid && telefone.touched) {
+            <p class="text-red-600 text-xs mt-1">Telefone inválido ou incompleto.</p>
+          }
         </div>
 
         <div class="md:col-span-2">
@@ -81,12 +95,19 @@
             type="text"
             [(ngModel)]="cliente.cep"
             name="cep"
+            #cep="ngModel"
             required
+            pattern="^\d{5}-\d{3}$"
+            inputmode="numeric"
             maxlength="9"
             placeholder="00000-000"
             appMask="cep"
             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            [class.border-red-400]="cep.invalid && cep.touched"
           />
+          @if (cep.invalid && cep.touched) {
+            <p class="text-red-600 text-xs mt-1">CEP inválido ou incompleto.</p>
+          }
         </div>
 
         <div>
@@ -105,12 +126,20 @@
           <input
             type="text"
             [(ngModel)]="cliente.estado"
+            (ngModelChange)="cliente.estado = $event.replace(/[^a-zA-Z]/g, '').toUpperCase()"
             name="estado"
+            #estado="ngModel"
             required
+            pattern="^[A-Za-z]{2}$"
+            minlength="2"
             maxlength="2"
             placeholder="SP"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 uppercase"
+            [class.border-red-400]="estado.invalid && estado.touched"
           />
+          @if (estado.invalid && estado.touched) {
+            <p class="text-red-600 text-xs mt-1">A sigla do estado deve ter exatamente 2 letras.</p>
+          }
         </div>
       </div>
 
