@@ -45,8 +45,13 @@ export class OrdemServicoForm implements OnInit {
       next: ({ clientes, veiculos }) => {
         this.clientes = clientes.content;
         this.veiculos = veiculos.content;
-        this.loading.set(false);
-        this.carregarOrdem();
+        
+        const id = this.route.snapshot.paramMap.get('id');
+        if (id) {
+          this.carregarOrdem(id);
+        } else {
+          this.loading.set(false);
+        }
       },
       error: () => {
         this.erro.set('Erro ao carregar clientes e veículos.');
@@ -61,10 +66,7 @@ export class OrdemServicoForm implements OnInit {
     return !!(entrada && saida && saida < entrada);
   }
 
-  private carregarOrdem(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (!id) return;
-
+  private carregarOrdem(id: string): void {
     this.editando.set(true);
     this.api.get<OrdemServico>(`ordem-servicos/${id}`).subscribe({
       next: data => {
