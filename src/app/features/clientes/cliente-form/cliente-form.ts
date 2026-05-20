@@ -83,8 +83,12 @@ export class ClienteForm implements OnInit {
 
     this.api.get<Page<Cliente>>('clientes?size=1000').subscribe({
       next: (data) => {
+        const cpfLimpo = this.cliente.cpf.replace(/\D/g, '');
         const cpfExiste = data.content.some(
-          c => c.cpf === this.cliente.cpf && c.id !== this.cliente.id
+          c => {
+            const dbCpf = (c.cpf || '').replace(/\D/g, '');
+            return dbCpf === cpfLimpo && c.id !== this.cliente.id;
+          }
         );
 
         if (cpfExiste) {
